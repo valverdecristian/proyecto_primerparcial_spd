@@ -43,22 +43,21 @@ void loop()
   // Verificar si se presionó el botón de subir
   if (digitalRead(PIN_SUBIR) == LOW) {
     numeroActual++;
-    delay(200); // Pequeño retraso para evitar rebotes
+    delay(200);
   }
 
   // Verificar si se presionó el botón de bajar
   if (digitalRead(PIN_BAJAR) == LOW) {
     numeroActual--;
-    delay(200); // Pequeño retraso para evitar rebotes
+    delay(200);
   }
 
   // Verificar si se presionó el botón de reset
   if (digitalRead(PIN_RESET) == LOW) {
     numeroActual = 0;
-    delay(200); // Pequeño retraso para evitar rebotes
+    delay(200);
   }
 
-  // Asegurarse de que el número esté dentro de los límites (0-9)
   if (numeroActual > 99) {
     numeroActual = 0;
   } else if (numeroActual < 0) {
@@ -182,7 +181,7 @@ void printDigit(int numero, int display) {
   
   }
   delay(10);
-  apagarSegmentos(5); // El valor 5 es solo para asegurarse de que todos los segmentos se apaguen completamente
+  apagarSegmentos(5);
 }
 
 void encenderDisplay(int display)
@@ -194,7 +193,7 @@ void encenderDisplay(int display)
   }
   else
   {
-    digitalWrite(DISPLAY_DERECHA, HIGH); //low: funciona como high
+    digitalWrite(DISPLAY_DERECHA, HIGH);
     digitalWrite(DISPLAY_IZQUIERDA, LOW);
   }
 }
