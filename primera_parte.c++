@@ -21,14 +21,21 @@
 // Variable que almacena el número actual mostrado en el display
 int numeroActual = 0;
 
+// variables necesarias para la función teclaPrecionado();
+int sube = 1;
+int subePrevia = 1;
+int baja = 1;
+int bajaPrevia = 1;
+int reset = 1;
+int resetPrevia = 1;
+
 void setup()
 {
   // Inicialización del puerto serie para la comunicación
   Serial.begin(9600);
   
   // Configuración de los pines del display como salidas
-  for(int i=5; i<12; i++)
-  {
+  for(int i=5; i<12; i++) {
     pinMode(i, OUTPUT);
   }
 
@@ -44,22 +51,19 @@ void setup()
 
 void loop()
 {
+  
+  int precionado = teclaPrecionado();
   // Verificar si se presionó el botón de subir
-  if (digitalRead(SUBIR) == LOW) {
+	if(precionado==SUBIR) {
     numeroActual++;
-    delay(200); // Evita el rebote del botón
   }
-
   // Verificar si se presionó el botón de bajar
-  if (digitalRead(BAJAR) == LOW) {
+  else if(precionado==BAJAR) {
     numeroActual--;
-    delay(200); // Evita el rebote del botón
   }
-
   // Verificar si se presionó el botón de reset
-  if (digitalRead(RESET) == LOW) {
-    numeroActual = 0;
-    delay(200); // Evita el rebote del botón
+  else if(precionado==RESET) {
+    numeroActual=0;
   }
 
   // Asegurarse de que el contador no supere los límites de 0 y 99
@@ -76,8 +80,7 @@ void loop()
 
 // Función para apagar todos los segmentos del display
 void apagarSegmentos(int i) {
-  for(i=5; i<12; i++)
-  {
+  for(i=5; i<12; i++) {
     digitalWrite(i, LOW);
   }
 }
@@ -192,14 +195,47 @@ void printDigit(int numero, int display) {
 // Función para encender el display derecho o izquierdo para la multiplexación
 void encenderDisplay(int display)
 {
-  if(display == DISPLAY_DERECHA)
-  {
+  if(display == DISPLAY_DERECHA) {
     digitalWrite(DISPLAY_DERECHA, LOW); //low: funciona como high
     digitalWrite(DISPLAY_IZQUIERDA, HIGH);
   }
-  else
-  {
+  else {
     digitalWrite(DISPLAY_DERECHA, HIGH);
     digitalWrite(DISPLAY_IZQUIERDA, LOW);
   }
+}
+
+int teclaPrecionado(void)// informa que pulsador se preciono, devuelve el numero que se preciono
+{ 
+	
+  sube = digitalRead(SUBIR); // devuelve 0 si presiono, 1 si no presiono
+  baja = digitalRead(BAJAR);
+	reset = digitalRead(RESET);
+  
+  if(sube== 1) { // si no presione SUBE
+    subePrevia = 1; //entonces antes tampoco estaba presionada
+  }
+  if(baja) { // si no presione BAJA
+    bajaPrevia = 1; //entonces antes tampoco estaba presionada
+  }
+  if(reset) { // si no presione RESET
+    resetPrevia = 1;//entonces antes tampoco estaba presionada
+  }
+    	
+  if(sube==0 && sube != subePrevia) {
+    subePrevia = sube;
+    return SUBIR;
+  }
+
+  if(baja==0 && baja != bajaPrevia) {
+    bajaPrevia = baja;
+    return BAJAR;
+  }
+
+  if(reset==0 && reset != resetPrevia) {
+    resetPrevia = reset;
+    return RESET;
+  }
+  return 0; //o no presione ninguna tecla, o presione una que estaba presionada
+ 
 }
