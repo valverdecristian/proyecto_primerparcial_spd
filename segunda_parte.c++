@@ -20,7 +20,11 @@
 #define DISPLAY_DERECHA A4
 #define DISPLAY_IZQUIERDA A5
 
-#define INTERRUPTOR 2 // Define el pin del interruptor
+// Define el pin del interruptor
+#define INTERRUPTOR 2 
+
+// Define el sensor de temperatura
+#define SENSOR_TEMPERATURA A2
 
 // Variable que almacena el número actual mostrado en el display
 int numeroActual = 0;
@@ -29,6 +33,13 @@ int numeroActual = 0;
 // inicialmente se asume que no se presiono dichos botones
 int subePrevia = 1;
 int bajaPrevia = 1;
+
+//Motor
+const int motorpin1 = 12; //pin positivo del motor 
+const int motorpin2 = 13; //pin negativo del motor
+
+// Variable para almacenar la temperatura
+int temperaturaCelsius;
 
 void setup()
 {
@@ -39,6 +50,9 @@ void setup()
   for(int i=5; i<12; i++) {
     pinMode(i, OUTPUT);
   }
+
+  pinMode(motorpin1, OUTPUT);
+  pinMode(motorpin2, OUTPUT);
 
   // Configuración de los pines de los botones como entradas con resistencias pull-up
   pinMode(SUBIR, INPUT_PULLUP);
@@ -62,6 +76,8 @@ void loop()
 
   if (interruptorEstado == HIGH)
   {
+    digitalWrite(motorpin2, HIGH);
+    digitalWrite(motorpin1, LOW);
     // Verificar si se presionó el botón de subir
     if (presionado == SUBIR)
     {
@@ -85,6 +101,8 @@ void loop()
   }
   else if (interruptorEstado == LOW)
   {
+    digitalWrite(motorpin1, HIGH);
+    digitalWrite(motorpin2, LOW);
     // Si el interruptor está en la posición de primos, encontrar el siguiente primo
     if (presionado == SUBIR)
     {
@@ -99,6 +117,20 @@ void loop()
   // Muestra el número actual en el display
   printDigit(numeroActual % 10, DISPLAY_DERECHA);
   printDigit(numeroActual / 10, DISPLAY_IZQUIERDA);
+
+  // Leer la temperatura desde el sensor TMP36
+  int lecturaSensor = analogRead(SENSOR_TEMPERATURA);
+
+  // Convertir el valor analógico a temperatura en grados Celsius
+  temperaturaCelsius = map(lecturaSensor, 20, 358, -40, 120);
+
+  // Mostrar la temperatura en el puerto serie
+  Serial.print("Temperatura: ");
+  Serial.print(temperaturaCelsius);
+  Serial.println(" grados Celcius");
+
+
+
 }
 
 // Función para apagar todos los segmentos del display
@@ -209,6 +241,7 @@ void printDigit(int numero, int display) {
     default:
       // Si no se reconoce el número, apaga todos los segmentos
       apagarSegmentos(5);
+      break;
   
   }
   delay(10); // Retardo para mostrar el dígito
