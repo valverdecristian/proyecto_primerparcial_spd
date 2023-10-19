@@ -1,4 +1,7 @@
-// Este código controla un contador de 0 a 99 usando un display de 7 segmentos y botones.
+// segunda parte: se modifica el proyecto de la parte 1 de la siguiente manera:
+// se sustituye el boton RESET por un SWITCH de dos posiciones.
+// dependiendo de la posición del interruptor, el display muestra o bien el contador
+// (como en la parte 1) o los numeros primos en el rango del 0 al 99
 
 // Definición de pines para los segmentos del display de 7 segmentos
 #define PIN_A 10
@@ -11,12 +14,13 @@
 
 // Definición de pines para los botones
 #define SUBIR 4
-#define RESET 3
-#define BAJAR 2
+#define BAJAR 3
 
 // Definición de pines para los displays multiplexados
 #define DISPLAY_DERECHA A4
 #define DISPLAY_IZQUIERDA A5
+
+#define INTERRUPTOR 2 // Define el pin del interruptor
 
 // Variable que almacena el número actual mostrado en el display
 int numeroActual = 0;
@@ -25,7 +29,6 @@ int numeroActual = 0;
 // inicialmente se asume que no se presiono dichos botones
 int subePrevia = 1;
 int bajaPrevia = 1;
-int resetPrevia = 1;
 
 void setup()
 {
@@ -40,40 +43,62 @@ void setup()
   // Configuración de los pines de los botones como entradas con resistencias pull-up
   pinMode(SUBIR, INPUT_PULLUP);
   pinMode(BAJAR, INPUT_PULLUP);
-  pinMode(RESET, INPUT_PULLUP);
 
   // Configuración de los pines de los displays multiplexados como salidas
   pinMode(DISPLAY_DERECHA, OUTPUT);
   pinMode(DISPLAY_IZQUIERDA, OUTPUT);
+
+  // Configura el pin del interruptor como entrada con resistencia pull-up
+  pinMode(INTERRUPTOR, INPUT_PULLUP);
 }
 
 void loop()
 {
+
+  // Lee el estado del interruptor
+  int interruptorEstado = digitalRead(INTERRUPTOR);
   
   int presionado = teclaPresionado();
-  // Verificar si se presionó el botón de subir
-	if(presionado == SUBIR) {
-    numeroActual++;
+
+  if (interruptorEstado == HIGH)
+  {
+    // Verificar si se presionó el botón de subir
+    if (presionado == SUBIR)
+    {
+      numeroActual++;
+    }
+    // Verificar si se presionó el botón de bajar
+    else if (presionado == BAJAR)
+    {
+      numeroActual--;
+    }
+
+    // Asegurarse de que el contador no supere los límites de 0 y 99
+    if (numeroActual > 99)
+    {
+      numeroActual = 0;
+    }
+    else if (numeroActual < 0)
+    {
+      numeroActual = 99;
+    }
   }
-  // Verificar si se presionó el botón de bajar
-  else if(presionado == BAJAR) {
-    numeroActual--;
-  }
-  // Verificar si se presionó el botón de reset
-  else if(presionado == RESET) {
-    numeroActual = 0;
+  else if (interruptorEstado == LOW)
+  {
+    // Si el interruptor está en la posición de primos, encontrar el siguiente primo
+    if (presionado == SUBIR)
+    {
+      esPrimoSubir();
+    }
+    else if (presionado == BAJAR)
+    {
+      esPrimoBajar();
+    }
   }
 
-  // Asegurarse de que el contador no supere los límites de 0 y 99
-  if (numeroActual > 99) {
-    numeroActual = 0;
-  } else if (numeroActual < 0) {
-    numeroActual = 99;
-  }
-
-  // Mostrar el número actual en el display
-  printDigit(numeroActual%10, DISPLAY_DERECHA);
-  printDigit(numeroActual/10, DISPLAY_IZQUIERDA);
+  // Muestra el número actual en el display
+  printDigit(numeroActual % 10, DISPLAY_DERECHA);
+  printDigit(numeroActual / 10, DISPLAY_IZQUIERDA);
 }
 
 // Función para apagar todos los segmentos del display
@@ -194,8 +219,8 @@ void printDigit(int numero, int display) {
 void encenderDisplay(int display)
 {
   if(display == DISPLAY_DERECHA) {
-    digitalWrite(DISPLAY_DERECHA, LOW); // enciende (0v) = 0
-    digitalWrite(DISPLAY_IZQUIERDA, HIGH); // apaga (5v) = 1
+    digitalWrite(DISPLAY_DERECHA, LOW);
+    digitalWrite(DISPLAY_IZQUIERDA, HIGH);
   }
   else {
     digitalWrite(DISPLAY_DERECHA, HIGH);
@@ -208,16 +233,12 @@ int teclaPresionado(void)// informa que pulsador se preciono, devuelve el numero
 	// variables para almacenar el estado actual de los botones
   int sube = digitalRead(SUBIR); // devuelve 0 si presiono, 1 si no presiono
   int baja = digitalRead(BAJAR);
-	int reset = digitalRead(RESET);
   
-  if(sube==1) { // si no presione SUBE
+  if(sube) { // si no presione SUBE
     subePrevia = 1; //entonces antes tampoco estaba presionada
   }
   if(baja) { // si no presione BAJA
     bajaPrevia = 1; //entonces antes tampoco estaba presionada
-  }
-  if(reset) { // si no presione RESET
-    resetPrevia = 1;//entonces antes tampoco estaba presionada
   }
     	
   if(sube == 0 && sube != subePrevia) {
@@ -230,10 +251,43 @@ int teclaPresionado(void)// informa que pulsador se preciono, devuelve el numero
     return BAJAR;
   }
 
-  if(reset == 0 && reset != resetPrevia) {
-    resetPrevia = reset;
-    return RESET;
-  }
   return 0; //o no presione ninguna tecla, o presione una que estaba presionada
  
+}
+
+bool esPrimo(int numero)
+{
+  if (numero <= 1) {
+    return false;
+  }
+  for (int i = 2; i * i <= numero; i++) {
+    if (numero % i == 0) {
+      return false;}
+  }
+  return true;
+}
+
+void esPrimoSubir()
+{
+    do
+    {
+        numeroActual++;
+    } while (!esPrimo(numeroActual) && numeroActual <= 99);
+    
+    if(numeroActual >= 99)
+    {
+        numeroActual = 2;
+    }
+}
+
+void esPrimoBajar()
+{
+    do
+    {
+        numeroActual--;
+    } while (!esPrimo(numeroActual) && numeroActual >= 0);
+    if(numeroActual <= 0)
+    {
+        numeroActual = 97;
+    }
 }
