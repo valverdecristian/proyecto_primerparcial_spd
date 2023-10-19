@@ -228,7 +228,8 @@ void encenderDisplay(int display)
   }
 }
 
-int teclaPresionado(void)// informa que pulsador se preciono, devuelve el numero que se preciono
+// informa que pulsador se preciono, devuelve el numero que se preciono
+int teclaPresionado(void)
 { 
 	// variables para almacenar el estado actual de los botones
   int sube = digitalRead(SUBIR); // devuelve 0 si presiono, 1 si no presiono
@@ -255,6 +256,8 @@ int teclaPresionado(void)// informa que pulsador se preciono, devuelve el numero
  
 }
 
+// Esta funcion verifica si un numero entero es primo o no
+// Valor de retorno: True si es primo, False si no lo es.
 bool esPrimo(int numero)
 {
   if (numero <= 1) {
@@ -267,6 +270,8 @@ bool esPrimo(int numero)
   return true;
 }
 
+// Esta función se utiliza para incrementar el valor de 'numeroActual' y
+// asegurarse de que 'numeroActual' apunte al siguiente número primo en orden ascendente
 void esPrimoSubir()
 {
     do
@@ -280,6 +285,8 @@ void esPrimoSubir()
     }
 }
 
+// Esta función se utiliza para disminuir el valor de 'numeroActual' y
+// asegurarse de que 'numeroActual' apunte al siguiente número primo en orden descendente.
 void esPrimoBajar()
 {
     do
