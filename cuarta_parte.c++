@@ -1,7 +1,6 @@
 // cuarta parte: se modifica la parte tres
 // el deslizante prende o apaga todo el sistema
 
-#include <Arduino.h>
 // Definición de pines para los segmentos del display de 7 segmentos
 #define PIN_A 10
 #define PIN_B 11
@@ -78,7 +77,7 @@ void loop()
 
   // Lee el estado del interruptor
   int interruptorEstado = digitalRead(INTERRUPTOR);
-  //int presionado = teclaPresionado();
+  int presionado = teclaPresionado();
 
   if (interruptorEstado == HIGH)
   {
@@ -123,29 +122,6 @@ void loop()
     // }
   }
 
-  // Muestra el número actual en el display
-  if(sistemaEncendido)
-  {
-    int presionado = teclaPresionado();
-    if (presionado == SUBIR)
-    {
-      numeroActual++;
-    }
-    else if (presionado == BAJAR)
-    {
-      numeroActual--;
-    }
-    // Asegúrate de que el contador no supere los límites de 0 y 99
-    if (numeroActual > 99)
-    {
-      numeroActual = 0;
-    }
-    else if (numeroActual < 0)
-    {
-      numeroActual = 99;
-    }
-  }
-
   // Muestra el número actual en el display si el sistema está encendido
   if (sistemaEncendido)
   {
@@ -167,8 +143,6 @@ void loop()
 
 //   valorFotoresistencia = analogRead(fotoresistencia);
 //   Serial.println(valorFotoresistencia);
-
-}
 
 // Función para apagar todos los segmentos del display
 void apagarSegmentos(int i) {
