@@ -79,12 +79,13 @@ void loop()
   int interruptorEstado = digitalRead(INTERRUPTOR);
   int presionado = teclaPresionado();
 
+  // sistema prendido
   if (interruptorEstado == HIGH)
   {
-    // digitalWrite(motorpin2, HIGH);
-    // digitalWrite(motorpin1, LOW);
-    // Verificar si se presionó el botón de subir
+    digitalWrite(motorpin2, HIGH);
+    digitalWrite(motorpin1, LOW);
     sistemaEncendido = !sistemaEncendido;
+    // Verificar si se presionó el botón de subir
     if (presionado == SUBIR)
     {
       numeroActual++;
@@ -104,9 +105,24 @@ void loop()
     {
       numeroActual = 99;
     }
+
+    // Leer la temperatura desde el sensor TMP36
+    int lecturaSensor = analogRead(SENSOR_TEMPERATURA);
+
+    // Convertir el valor analógico a temperatura en grados Celsius
+    temperaturaCelsius = map(lecturaSensor, 20, 358, -40, 120);
+
+    // Mostrar la temperatura en el puerto serie
+    Serial.print("Temperatura: ");
+    Serial.print(temperaturaCelsius);
+    Serial.println(" grados Celcius");
+
+    valorFotoresistencia = analogRead(fotoresistencia);
+    Serial.println(valorFotoresistencia);
   }
   else
   {
+    // sistema apagado
     sistemaEncendido = false;
     digitalWrite(motorpin1, LOW);
     digitalWrite(motorpin2, LOW);
@@ -130,19 +146,7 @@ void loop()
   }
   
 }
-//   // Leer la temperatura desde el sensor TMP36
-//   int lecturaSensor = analogRead(SENSOR_TEMPERATURA);
 
-//   // Convertir el valor analógico a temperatura en grados Celsius
-//   temperaturaCelsius = map(lecturaSensor, 20, 358, -40, 120);
-
-//   // Mostrar la temperatura en el puerto serie
-//   Serial.print("Temperatura: ");
-//   Serial.print(temperaturaCelsius);
-//   Serial.println(" grados Celcius");
-
-//   valorFotoresistencia = analogRead(fotoresistencia);
-//   Serial.println(valorFotoresistencia);
 
 // Función para apagar todos los segmentos del display
 void apagarSegmentos(int i) {
