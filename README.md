@@ -1,6 +1,6 @@
-Integrantes:
-Valverde, Cristian Jorge
-Pazos, Axel
+<h2>Integrantes:</h2>
+<h2>Valverde, Cristian Jorge</h2>
+<h2>Pazos, Axel</h2>
 
 <h2>PARTE 1:</h2>
 <p>Contador de 0 a 99 usando un display de 7 segmentos y tres botones: SUBIR, BAJAR Y RESET. Al apretar estos botones se va mostrando los dígitos según corresponda y en caso de RESET se muestra siempre 0.</p>
