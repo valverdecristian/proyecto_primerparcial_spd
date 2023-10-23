@@ -128,7 +128,7 @@ void loop()
   int lecturaSensor = analogRead(SENSOR_TEMPERATURA);
 
   // Convertir el valor analógico a temperatura en grados Celsius
-  temperaturaCelsius = map(lecturaSensor, 20, 358, -40, 120);
+  temperaturaCelsius = map(lecturaSensor, 20, 358, -40, 125);
 
   // Mostrar la temperatura en el puerto serie
   Serial.print("Temperatura: ");
