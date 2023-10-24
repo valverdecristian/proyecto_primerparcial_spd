@@ -12,7 +12,7 @@
     <li>Resistencia 220 Ω (7)</li>
 </ul>
 
-![Contador de 0 a 99](https://github.com/valverdecristian/proyecto_primerparcial_spd/blob/main/1raParteTP.jpg)
+![PARTE 1](https://github.com/valverdecristian/proyecto_primerparcial_spd/blob/main/img/SimuladorParte1.gif)
 
 
 <h2>PARTE 2:</h2>
@@ -32,6 +32,7 @@ Y por ultimo se implementa un "Sensor de temperatura" el cual se utiliza para me
     <li>Sensor de temperatura [TMP36]</li>
 </ul>
 
+![PARTE 2](https://github.com/valverdecristian/proyecto_primerparcial_spd/blob/main/img/SimuladorParte2.gif)
 
 <h2>PARTE 3:</h2>
 <p>Se modifica la parte 2 y se implementa una "fotoresistencia" es un componente electrónico que cambia su resistencia eléctrica en función de la intensidad de la luz que incide sobre él. Básicamente, es un sensor de luz. Tiene una resistencia variable la cual es alta si esta en la oscuridad o va disminuyendo con la exposicion a la luz.</p>
